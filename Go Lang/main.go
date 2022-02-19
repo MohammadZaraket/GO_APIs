@@ -52,7 +52,7 @@ func main() {
 	}
 
 }*/
-
+/*
 import (
 	"database/sql"
 	"encoding/json"
@@ -67,10 +67,6 @@ type Article struct {
 	ID   int    `json:"id"`
 	Name string `json:"first_name"`
 }
-
-// let's declare a global Articles array
-// that we can then populate in our main function
-// to simulate a database
 
 var Articles = []Article{}
 
@@ -109,7 +105,6 @@ func main() {
 		if err != nil {
 			panic(err.Error())
 		}
-		//log.Printf(tag.Name)
 		Articles = append(Articles, tag)
 
 	}
@@ -121,3 +116,5 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllArticles")
 	json.NewEncoder(w).Encode(Articles)
 }
+
+*/
