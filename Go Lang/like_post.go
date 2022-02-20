@@ -1,4 +1,4 @@
-/*package main
+package main
 
 import (
 	"database/sql"
@@ -18,6 +18,10 @@ var (
 
 var results []string
 
+type Article struct {
+	ID int `json:"id"`
+}
+
 func GetHandler(w http.ResponseWriter, r *http.Request) {
 	jsonBody, err := json.Marshal(results)
 	if err != nil {
@@ -28,8 +32,11 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
+
 	if r.Method == "POST" {
+		//var Articles = []Article{}
 		r.ParseForm()
+		user_id := r.Form.Get("user_id")
 		post_id := r.Form.Get("post_id")
 		fmt.Println("Go MySQL Tutorial")
 		db, err := sql.Open("mysql", "root:@/facebookdb")
@@ -37,19 +44,54 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 			panic(err.Error())
 		}
 		defer db.Close()
-		insert, err := db.Query("DELETE FROM posts WHERE id=?;", post_id)
-		if err != nil {
-			panic(err.Error())
-		} else {
-			resp := make(map[string]string)
-			resp["status"] = "Post Deleted!"
-			jsonResp, err := json.Marshal(resp)
+
+		var enough bool
+		if err := db.QueryRow("SELECT id FROM likes WHERE post_id=? AND user_id=?", post_id, user_id).Scan(&enough); err != nil {
+			if err == sql.ErrNoRows {
+
+				insert, err := db.Query("INSERT INTO likes VALUES (NULL,?,?)", post_id, user_id)
+				if err != nil {
+					panic(err.Error())
+
+				}
+				defer insert.Close()
+				fmt.Println("sucess")
+
+			} else {
+
+				delete, err := db.Query("DELETE FROM likes WHERE post_id=? AND user_id=?", post_id, user_id)
+				if err != nil {
+					panic(err.Error())
+
+				}
+
+				defer delete.Close()
+				fmt.Println("sucess")
+			}
+
+		}
+
+		/*results, err := db.Query("SELECT id FROM likes WHERE post_id=? AND user_id=?", post_id, user_id)
+		if err == sql.ErrNoRows {
+			insert, err := db.Query("INSERT INTO likes VALUES (NULL,?,?)", post_id, user_id)
 			if err != nil {
-				log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+				panic(err.Error())
+
 			}
 			defer insert.Close()
-			w.Write(jsonResp)
+			fmt.Println("sucess")
 		}
+
+		for results.Next() {
+			var tag Article
+			err = results.Scan(&tag.ID)
+			if err != nil {
+				panic(err.Error())
+			}
+			Articles = append(Articles, tag)
+		}*/
+
+		//json.NewEncoder(w).Encode(Articles)
 
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
@@ -70,4 +112,5 @@ func main() {
 
 	log.Printf("listening on port %s", *flagPort)
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
-}*/
+
+}

@@ -1,4 +1,4 @@
-package main
+/*package main
 
 import (
 	"database/sql"
@@ -83,3 +83,4 @@ func main() {
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
 
 }
+*/
