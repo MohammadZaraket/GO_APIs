@@ -71,28 +71,6 @@ func PostHandler(w http.ResponseWriter, r *http.Request) {
 
 		}
 
-		/*results, err := db.Query("SELECT id FROM likes WHERE post_id=? AND user_id=?", post_id, user_id)
-		if err == sql.ErrNoRows {
-			insert, err := db.Query("INSERT INTO likes VALUES (NULL,?,?)", post_id, user_id)
-			if err != nil {
-				panic(err.Error())
-
-			}
-			defer insert.Close()
-			fmt.Println("sucess")
-		}
-
-		for results.Next() {
-			var tag Article
-			err = results.Scan(&tag.ID)
-			if err != nil {
-				panic(err.Error())
-			}
-			Articles = append(Articles, tag)
-		}*/
-
-		//json.NewEncoder(w).Encode(Articles)
-
 	} else {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 	}

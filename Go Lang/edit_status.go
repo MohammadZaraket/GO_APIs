@@ -1,4 +1,4 @@
-/*package main
+package main
 
 import (
 	"database/sql"
@@ -62,4 +62,3 @@ func main() {
 	log.Printf("listening on port %s", *flagPort)
 	log.Fatal(http.ListenAndServe(":"+*flagPort, mux))
 }
-*/
